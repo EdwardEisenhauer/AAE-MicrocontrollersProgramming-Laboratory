@@ -3,24 +3,24 @@
 This directory aims to provide a reference for the register-level programming of
 the STM32 microcontrollers.
 
-## Usage
+## Structure
 
 Each subdirectory contains a source code, necessary libraries, and a `Makefile`
 for the STM development board target compilation and flashing:
 
 ```sh
-STM32F411E-DISCO
+STM32F407G-DISC1
 ├── Makefile
-├── Drivers     # ST-provided files
-├── Inc         # header files
-└── Src         # Source files
+├── drv         # ST-provided files
+├── inc         # header files
+└── src         # Source files
 ```
 
 To build the binary run `make`. To flash the target board run `make flash`.
 
 ## Laboratory work plan
 
-The main task to be completed throughout the laboratory is implementing:
+The main tasks to be completed throughout the laboratory cover implementing:
 
 1. A function that configures the clock source to:
 
@@ -28,7 +28,7 @@ The main task to be completed throughout the laboratory is implementing:
 - High-Speed Internal (HSI) clock,
 - Phase-Locked Loop (PLL) to the frequency selected by the user.
 
-2. A custom delay function which uses an interrupt, based on the Systic timer.
+2. A custom delay function which uses an interrupt and the Systic timer.
 
 3. A function which:
 
@@ -41,3 +41,10 @@ duty cycle from 0 to 100% in the increments of 20%.
 5. Reading data from the on-board accelerometer.
 
 6. Driving the LEDs intencities based on the board inclination.
+
+## Makefile
+
+```sh
+gcc -- help
+  -c                       Compile and assemble, but do not link.
+```
