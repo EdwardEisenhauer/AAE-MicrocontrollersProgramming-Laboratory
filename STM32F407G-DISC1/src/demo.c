@@ -25,6 +25,23 @@ static void setup_mco2 () {
     RCC->CFGR &= ~RCC_CFGR_MCO2; // Set MCO2 to SYSCLK.
 }
 
+// Toggle between user LEDs upon the user button click
+void toggle_leds_on_button_press (bool loop) {
+  uint8_t counter = 0;
+  turn_off_leds();
+
+  while (1) {
+    if (GPIOA->IDR & GPIO_IDR_ID0) {
+      turn_off_leds();
+      GPIOD->BSRR = ( GPIO_BSRR_BS12 << ( counter % 4) );
+      counter++;
+      while (GPIOA->IDR & GPIO_IDR_ID0);
+    }
+    if ( !loop && counter == 4) break;
+    wait_ms(100);
+  }
+}
+
 void demo (void) {
 	setup_leds(false);
   setup_button();
@@ -48,6 +65,10 @@ void demo (void) {
 
   setup_pll_80mhz();
   GPIOD->BSRR = LED_BLUE_ON;
+  wait_ms(DELAY_MS);
+  while (! (GPIOA->IDR & GPIO_IDR_ID0) );
+
+  toggle_leds_on_button_press(false);
   wait_ms(DELAY_MS);
   while (! (GPIOA->IDR & GPIO_IDR_ID0) );
 
