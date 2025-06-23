@@ -41,6 +41,16 @@ void demo (void) {
   wait_ms(DELAY_MS);
   while (! (GPIOA->IDR & GPIO_IDR_ID0) );
 
+  setup_pll_max();
+  GPIOD->BSRR = LED_RED_ON;
+  wait_ms(DELAY_MS);
+  while (! (GPIOA->IDR & GPIO_IDR_ID0) );
+
+  setup_pll_80mhz();
+  GPIOD->BSRR = LED_BLUE_ON;
+  wait_ms(DELAY_MS);
+  while (! (GPIOA->IDR & GPIO_IDR_ID0) );
+
   while (1) {
     turn_off_leds();
     wait_ms(DELAY_MS);
