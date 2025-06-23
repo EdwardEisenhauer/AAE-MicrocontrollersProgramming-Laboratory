@@ -52,6 +52,7 @@ OBJCOPY = $(TOOLCHAIN_PREFIX)objcopy
 # Flags - Warning Options
 CFLAGS  = -Wall
 CFLAGS += -Wextra
+CFLAGS += -Wunused
 # Flags - Debugging Options
 CFLAGS += -g
 # Flags - Optimization Options
