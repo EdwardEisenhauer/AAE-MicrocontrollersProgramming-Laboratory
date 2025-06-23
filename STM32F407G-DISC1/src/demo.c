@@ -28,10 +28,18 @@ static void setup_mco2 () {
 void demo (void) {
 	setup_leds(false);
   setup_button();
-  setup_hsi();
   setup_systick(SYSTICK_TICKS);
   setup_mco2();
+
+  setup_hsi();
+  GPIOD->BSRR = LED_GREEN_ON;
+  wait_ms(DELAY_MS);
+  while (! (GPIOA->IDR & GPIO_IDR_ID0) );
   
+  setup_hse();
+  GPIOD->BSRR = LED_ORANGE_ON;
+  wait_ms(DELAY_MS);
+  while (! (GPIOA->IDR & GPIO_IDR_ID0) );
 
   while (1) {
     turn_off_leds();

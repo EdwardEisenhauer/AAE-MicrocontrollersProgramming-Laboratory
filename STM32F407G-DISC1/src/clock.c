@@ -38,6 +38,29 @@ void setup_hsi () {
 	core_clock = HSI_VALUE;
 }
 
+// Disable High-Speed Internal clock
+void disable_hsi () {
+    // Disable HSI clock
+    RCC->CR &= ~RCC_CR_HSION;
+    // Wait for the HSI clock to be disabled
+    while (RCC->CR & RCC_CR_HSIRDY);
+}
+
+// Set up High-Speed External clock
+// f_HSE = 8 MHz
+void setup_hse () {
+    if ( (RCC->CFGR & RCC_CFGR_SWS) == RCC_CFGR_SWS_HSE) return;
+
+    RCC->CR |= RCC_CR_HSEON;  // Enable HSE clock
+    while ( !(RCC->CR & RCC_CR_HSERDY) );  // Wait for the HSE clock to be ready
+    // Set HSE as the system clock
+    RCC->CFGR &= ~RCC_CFGR_SW;
+    RCC->CFGR |= RCC_CFGR_SW_HSE;
+    // Wait for the system clock to switch to HSE
+    while ( !(RCC->CFGR & RCC_CFGR_SWS_HSE) );
+    core_clock = HSE_VALUE;
+}
+
 void wait_ticks (uint32_t ticks) {
 	systick_counter = ticks / SYSTICK_TICKS;
 	while ( systick_counter );

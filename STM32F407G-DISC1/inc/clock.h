@@ -9,6 +9,8 @@
 
 int setup_systick(uint32_t);
 void setup_hsi ();
+void disable_hsi();
+void setup_hse();
 void wait_ticks(uint32_t);
 int wait_ms(uint32_t);
 
