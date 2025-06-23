@@ -29,6 +29,8 @@ typedef enum {
 } LED;
 
 void setup_leds (bool);
+void enable_pwm_for_leds ();
+void set_pwm (LED, int);
 void turn_on_led (LED);
 void turn_off_led (LED);
 void turn_on_leds ();

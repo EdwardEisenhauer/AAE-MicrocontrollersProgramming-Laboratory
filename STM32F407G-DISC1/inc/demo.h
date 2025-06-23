@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define DELAY_MS 1000UL
+#define DELAY_MS 500UL
 
 void demo (void);
 

@@ -1,5 +1,7 @@
 #include "led.h"
 
+extern uint32_t core_clock;
+
 // Set up user LEDs on STM32F407G-DISC1.
 // If pwm is set to true, the LEDs will be configured to be driven by PWM.
 void setup_leds (bool pwm) {
@@ -55,6 +57,52 @@ void setup_leds (bool pwm) {
 
   GPIOD->OSPEEDR |= GPIO_OSPEEDR_OSPEED15;
   GPIOD->PUPDR &= ~GPIO_PUPDR_PUPD15;
+}
+
+void enable_pwm_for_leds () {
+  // APB - AMBA Peripheral Bus
+	RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
+
+	// The counter clock frequency CK_CNT is equal to f_CK_PSC / (PSC[15:0] + 1).
+	TIM4->PSC = ( core_clock / 1000000 ) - 1;
+	// Timer 4 Auto-Reload Register.
+	TIM4->ARR = 1000 - 1;
+
+	// Timer 4 Capture/Compare Mode Register 1.
+	TIM4->CCMR1 |= TIM_CCMR1_OC1M_1 | TIM_CCMR1_OC1M_2 |
+			           TIM_CCMR1_OC2M_1 | TIM_CCMR1_OC2M_2;
+	TIM4->CCMR2 |= TIM_CCMR2_OC3M_1 | TIM_CCMR2_OC3M_2 |
+			           TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2;
+	// Output compare preload enable
+	TIM4->CCMR1 |= TIM_CCMR1_OC1PE | TIM_CCMR1_OC2PE;
+	TIM4->CCMR2 |= TIM_CCMR2_OC3PE | TIM_CCMR2_OC4PE;
+
+	// Timer 4 Capture/Compare Enable Register.
+	TIM4->CCER |= TIM_CCER_CC1E | TIM_CCER_CC2E | TIM_CCER_CC3E | TIM_CCER_CC4E;
+	// Auto-reload preload enable.
+	TIM4->CR1 |= TIM_CR1_ARPE;
+	TIM4->CR1 |= TIM_CR1_CEN;  // Enable Timer 4
+}
+
+void set_pwm (LED led, int duty_cycle) {
+	if ( duty_cycle >= 100 ) duty_cycle = 100;
+
+	unsigned t_on_ticks = (TIM4->ARR * duty_cycle) / 100;
+
+	switch ( led ) {
+		case LD3:
+			TIM4->CCR2 = t_on_ticks;
+			break;
+		case LD4:
+			TIM4->CCR1 = t_on_ticks;
+			break;
+		case LD5:
+			TIM4->CCR3 = t_on_ticks;
+			break;
+		case LD6:
+			TIM4->CCR4 = t_on_ticks;
+			break;
+	}
 }
 
 void turn_on_led (LED led) {
