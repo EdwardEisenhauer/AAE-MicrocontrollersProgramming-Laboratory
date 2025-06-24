@@ -9,6 +9,7 @@
 #include "clock.h"
 #include "demo.h"
 #include "led.h"
+#include "spi.h"
 
 #define SYSTICK_TICKS 16000UL
 

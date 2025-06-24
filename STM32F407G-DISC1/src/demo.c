@@ -83,8 +83,11 @@ void demo (void) {
   toggle_leds_pwm_on_button_press(false);
   wait_for_button_press(DEBOUNCE_DELAY_MS);
 
+  setup_spi();
   setup_leds(false);
+
   while (1) {
+    spi_write((uint8_t)0xAA);
     turn_off_leds();
     wait_ms(DEBOUNCE_DELAY_MS);
     turn_on_leds();
