@@ -14,8 +14,8 @@
 #define LED_BLUE_OFF   GPIO_BSRR_BR15
 
 typedef enum {
-    LD4 = 0,
-    LD3 = 1,
+	LD4 = 0,
+	LD3 = 1,
 	LD5 = 2,
 	LD6 = 3,
 	LED_ORANGE = LD3,

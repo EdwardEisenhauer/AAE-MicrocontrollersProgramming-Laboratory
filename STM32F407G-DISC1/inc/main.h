@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stm32f4xx.h>
 
+#include "button.h"
 #include "clock.h"
 #include "demo.h"
 #include "led.h"

@@ -3,8 +3,6 @@
 
 #include "main.h"
 
-#define DELAY_MS 500UL
-
 void demo (void);
 
 #endif /* DEMO_H_ */
