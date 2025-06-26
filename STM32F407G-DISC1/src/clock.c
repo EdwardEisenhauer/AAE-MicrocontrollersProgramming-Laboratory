@@ -156,3 +156,7 @@ int wait_ms (uint32_t ms) {
 	wait_ticks((uint32_t)(ms * (core_clock / 1000UL)));
 	return 0;
 }
+
+void wait_us (uint32_t us) {
+	wait_ticks((uint32_t)(us * (core_clock / 1000000UL)));
+}

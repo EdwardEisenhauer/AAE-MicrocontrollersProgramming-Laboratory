@@ -23,5 +23,6 @@ void setup_pll_max();
 void setup_pll_80mhz();
 void wait_ticks(uint32_t);
 int wait_ms(uint32_t);
+void wait_us(uint32_t);
 
 #endif /* CLOCK_H_ */
