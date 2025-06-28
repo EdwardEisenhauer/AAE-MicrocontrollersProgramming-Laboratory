@@ -63,14 +63,14 @@ void setup_hse () {
 
 // Set up Phase Locked Loop
 void setup_pll (
-	unsigned wait_states,
-	unsigned pll_src,
-	unsigned pllm,
-	unsigned plln,
+	uint32_t wait_states,
+	uint32_t pll_src,
+	uint32_t pllm,
+	uint32_t plln,
 	PLLP_Division pllp
 ) {
 	if (pllm < 2 || pllm > 63 || plln < 50 || plln > 432) {
-			while (1);
+		while (1);
 	}
 
 	FLASH->ACR |= wait_states;
@@ -106,23 +106,31 @@ void setup_pll (
 	// Wait until PLL is system clock
 	while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
 
-	core_clock = HSE_VALUE * plln / pllm / ( 2 * (pllp + 1) ) ;
+	core_clock = HSE_VALUE / pllm * plln / pllp ;
 }
 
-// Set up Phase Locked Loop to get the maximum system clock
-// For STM32F411 it is 100 MHz
+// Set up Phase-Locked Loop to get the maximum system clock.
+// For STM32F407 it is 168 MHz.
+// f_PLL = f_PLLsrc * ( f_PLLN / f_PLLM ) / f_PLLP
 void setup_pll_max () {
-	// For f_HCLK = 80 MHz at 3.3 V the number of wait states ust be set to 3
-	unsigned wait_states = FLASH_ACR_LATENCY_3WS;
-	// HSE source on STM32F411E-DISCO is 8 MHz
+	// RCC_PLLCFGR default value:
+	// 0x     2    4    0    0      3    0    1    0
+	// 0b  0010 0100 0000 0000   0011 0000 0001 0000
+	// The default PLLN is 0b 0110 0000 or 0x60 or 96.
+
+	// For f_HCLK < 150 MHz at 3.3 V the number of wait states ust be set to 5.
+	unsigned wait_states = FLASH_ACR_LATENCY_5WS;
+	// Set f_PLLsrc to HSE with f = 8 MHz.
 	unsigned pll_src = RCC_PLLCFGR_PLLSRC_HSE;
 	unsigned pllm = 4;  // Set PLLM to 4
-	unsigned plln = 100;  //Set PLLN to 100
+	unsigned plln = 168;  //Set PLLN to 168
 	// 00: PLLP = 2
 	// 01: PLLP = 4
 	// 10: PLLP = 6
 	// 11: PLLP = 8
 	unsigned pllp = PLLP_DIV_2;  // Set PLLP to 2
+	
+	// f_PLL = 8 MHz * ( 168 / 4 ) / 2 = 168 MHz
 
 	setup_pll(wait_states, pll_src, pllm, plln, pllp);
 }

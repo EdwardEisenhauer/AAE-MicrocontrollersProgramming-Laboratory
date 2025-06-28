@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-#define DEBOUNCE_DELAY_MS 100UL
+#define DEBOUNCE_DELAY_MS 200UL
 
 // Set up the user button on STM32F407G-DISC1
 void setup_button ();
